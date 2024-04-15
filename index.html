@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="Zero-shot Building Age Classification From Facade Image Using GPT-4">
+  <meta name="keywords" content="FI-London, Building Age, Facade Image, GPT-4">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Building Age Classifier using GPT-4 & Facade Image in London (FI-London) Dataset</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <!-- Result Gallery -->
+  <link rel="stylesheet" href="./static/css/result-gallery.css">
+  <!-- Result Gallery -->
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/buidling.png" type="image/png">
+
+  <!-- Result Gallery -->
+  <script defer src="./static/js/result-gallery.js"></script>
+  <!-- Result Gallery -->
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+</head>
+<body>
+
+<!-- <nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div class="navbar-menu">
+    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+      <a class="navbar-item" href="https://www.zengzichao.com/en/about/">
+      <span class="icon">
+          <i class="fas fa-home"></i>
+      </span>
+      </a>
+
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">
+          More Research
+        </a>
+        <div class="navbar-dropdown">
+          <a class="navbar-item" href="">
+            HyperNeRF
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</nav> -->
+
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-2 publication-title">Building Age Classifier (Zero-shot) using GPT-4 & Facade Image in London (FI-London) Dataset</h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="https://www.zengzichao.com/en/about/">Zichao Zeng</a>,</span>
+            <span class="author-block">
+              <a href="https://profiles.ucl.ac.uk/96956-june-moh-goo">June Moh Goo</a>,</span>
+            <span class="author-block">
+              <a href="https://profiles.ucl.ac.uk/85526-xinglei-wang">Xinglei Wang</a>,</span>              
+            <span class="author-block">
+              <a href="https://profiles.ucl.ac.uk/58015-bin-chi">Bin Chi</a>,</span>
+            <span class="author-block">
+              <a href="https://profiles.ucl.ac.uk/80441-meihui-wang">Meihui Wang</a>,</span>    
+            <span class="author-block">
+              <a href="https://profiles.ucl.ac.uk/27481-jan-boehm">Jan Boehm</a>
+            </span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">University College London</span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- PDF Link. -->
+              <!-- <span class="link-block">
+                <a href=""
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span> -->
+              <!-- <span class="link-block">
+                <a href=""
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+              </span> -->
+              <!-- Video Link. -->
+              <!-- <span class="link-block">
+                <a href=""
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-youtube"></i>
+                  </span>
+                  <span>Video</span>
+                </a>
+              </span> -->
+              <!-- Code Link. -->
+              <span class="link-block">
+                <a href="https://github.com/3Dimaging-ucl/Building_Age_Classifier_with_FI-London"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                  </a>
+              </span>
+              <!-- Dataset Link. -->
+              <span class="link-block">
+                <a href=""
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="far fa-images"></i>
+                  </span>
+                  <span>Dataset</span>
+                  </a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <video id="teaser" autoplay muted loop playsinline height="100%">
+        <source src="./static/videos/framework.mp4"
+                type="video/mp4">
+      </video>
+      <!-- <h2 class="subtitle has-text-centered">
+        Framework of Building Age Classifier
+      </h2> -->
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            A building's age of construction is crucial for 
+            supporting many geospatial applications. Much 
+            current research focuses on estimating building 
+            age from facade images using deep learning. 
+            However, building an accurate deep learning model 
+            requires a considerable amount of labelled 
+            training data, and the trained models often have 
+            geographical constraints. Recently, large pre-trained 
+            vision language models (VLMs) such as GPT-4 
+            Vision, which demonstrate significant generalisation 
+            capabilities, have emerged as potential training-free 
+            tools for dealing with specific vision tasks, but their 
+            applicability and reliability for building 
+            information remain unexplored. In this study, 
+            a zero-shot building age classifier for facade 
+            images is developed using prompts that include logical 
+            instructions. Taking London as a test case, we introduce 
+            a new dataset, FI-London, comprising facade images and 
+            building age epochs. Although the training-free classifier 
+            achieved a modest accuracy of <b>39.69%</b>, the mean 
+            absolute error of <b>0.85</b> decades indicates that the model 
+            can predict building age epochs successfully albeit 
+            with a small bias. The ensuing discussion reveals 
+            that the classifier struggles to predict the age 
+            of very old buildings and is challenged by fine-grained 
+            predictions within 2 decades. Overall, the classifier 
+            utilising GPT-4 Vision is capable of predicting 
+            the rough age epoch of a building from a single 
+            facade image without any training.
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+  </div>
+</section>
+
+<!--/ FI-London. -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-full">
+        <h2 class="title is-3">🏢 FI-London</h2>
+        <div class="content has-text-justified">
+          <p>
+            FI-London contains a total of 131 high-resolution building facade images. These 
+            images contain individual building facades of varying building 
+            types such as residential apartment blocks, terraced houses, 
+            commercial properties, etc. FI-London covers <b>15 different architectural age epochs</b>, derived from the 
+            <a href="https://colouringcities.org/">Colourring Cities Research Programme</a>. 
+            Due to the unbalanced sample distribution and small sample size, FI-London can 
+            currently only be used for testing. Please download FI-London
+            <a href="">here</a>. 
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-4">Sample of Each Age Epoch</h2>
+      </div>
+    </div>
+    
+    <div class="columns is-centered">
+      <div class="column is-full-width"> 
+        <img src="./static/images/samples.png" alt="Sample Image" style="max-width:80%; margin:auto; display:block;">
+      </div>
+    </div>
+    
+
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-4">Data Distribution</h2>
+      </div>
+    </div>
+
+    <div class="columns is-centered">
+      <div class="column is-full-width"> 
+        <img src="./static/images/dt_distribution.png" alt="Data Distribution" style="max-width:50%; margin:auto; display:block;">
+      </div>
+    </div>
+    
+
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-4">Colection Location</h2>
+      </div>
+    </div>
+
+    <div class="columns is-centered">
+      <!-- Brent. -->
+      <div class="column">
+        <div class="content has-text-centered">
+          <h2 class="title is-5">Brent</h2>
+          <img src="./static/images/Brent_cp.png" alt="Collection Location in Brent" style="max-width:80%; margin:auto;">
+        </div>
+      </div>
+      <!--/ Brent. -->
+
+      <!-- Camden. -->
+      <div class="column">
+        <div class="content has-text-centered">
+          <h2 class="title is-5">Camden</h2>
+          <img src="./static/images/Camden_cp.png" alt="Collection Location in Camden" style="max-width:80%; margin:auto;">
+        </div>
+      </div>
+      <!--/ Camden. -->
+    </div>
+  </div>
+</section>
+<!--/ FI-London. -->
+
+<!--/ Classifier. -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-full">
+        <h2 class="title is-3">🤖 Zero-shot Classifier</h2>
+        <div class="content has-text-justified">
+          <p>
+            A <b>training-free</b> classifier is proposed in this study to identify the age epochs 
+            of buildings using GPT-4 Vision. A series of command prompts is crafted to perform zero-sample 
+            classification directly using GPT-4 Vision. The predicted age epoch and descriptive reasoning 
+            process are output by the classifie. Please find the demo 
+            <a href="https://github.com/3Dimaging-ucl/Building_Age_Classifier_with_FI-London/blob/main/BaC_demo.ipynb">here</a>. 
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="columns is-centered">
+      <div class="column is-one-quarter">
+        <div class="content has-text-centered">
+          <h2 class="title is-5">Workflow</h2>
+          <img src="./static/images/classifier.png" alt="Workflow" style="max-width:100%; margin:auto;">
+        </div>
+      </div>
+      
+      <div class="column">
+        <div class="content has-text-centered is-tree-quarters">
+          <h2 class="title is-5">Prompt</h2>
+          <img src="./static/images/prompt.png" alt="Prompt" style="max-width:90%; margin:auto;">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-full">
+        <div class="content has-text-justified">
+          <p>
+            *The GPT model is <i>GPT-4 Vison Preview</i>. The cost was <b>$2.08 for 131 images</b>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+<section class="section">
+<!--/ Classifier. -->
+
+<!--/ Result. -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-full">
+        <h2 class="title is-3">📊 Result</h2>
+        <div class="content has-text-justified">
+          <p>
+            The classifier finally resulted in <b>52 correct</b> and <b>79 incorrect</b> cases with 
+            <b>1 "hallucination"</b> case. Although GPT-4 Vision performed slightly less well in detailed 
+            prediction with <b>39.69% accuracy</b>, the Mean Absolute Error (MAE) was only <b>0.85 decade</b>, which means most 
+            of the age epochs can be predicted successfully to be in adjacent but not far off age epochs. 
+          </p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-4">Visual Result Gallery</h2>
+        <div class="content has-text-justified">
+          <p>
+            Please click an image to see the predicted result. 
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="columns">
+      <div class="column is-one-quarter" id="result-gallery">
+        <div class="image-container" style="overflow-y: auto; height: 300px;">
+          <img src="./static/images/result/38.jpg" alt="Description 1" id="image1">
+          <template id="desc-image1">
+            <p><b>ID</b>: 38</p>
+            <p><b>Ground Truth</b>: <1700</p>
+            <p><b>Predicted Result</b>: <b>1860-1879</b></p>
+            <p><b>Reason</b>: The building features architectural elements such as stucco-fronted facades and sash windows 
+              which are indicative of the Victorian era, particularly the period between 1860 and 1879 when such 
+              designs were commonplace in London housing.</p>
+          </template>
+  
+          <img src="./static/images/result/91.jpg" alt="Description 2" id="image2">
+          <template id="desc-image2">
+            <p><b>ID</b>: 91</p>
+            <p><b>Ground Truth</b>: 1700-1749</p>
+            <p><b>Predicted Result</b>: <b>1700-1749</b></p>
+            <p><b>Reason</b>: The building exhibits features characteristic of Georgian architecture commonly found in London, 
+              such as the symmetrical arrangement of sash windows with glazing bars, red brick construction with contrasting 
+              white window headers and a parapet hiding the roof. These features were prevalent during the early to mid-18th 
+              century.</p>
+          </template>
+  
+          <img src="./static/images/result/59.jpg" alt="Description 3" id="image3">
+          <template id="desc-image3">
+            <p><b>ID</b>: 59</p>
+            <p><b>Ground Truth</b>: 1750-1799</p>
+            <p><b>Predicted Result</b>: <b>1750-1799</b></p>
+            <p><b>Reason</b>: The building features Georgian architectural elements such as brickwork, sash windows, and a 
+              white stucco ground floor, typical of the late Georgian era which corresponds to the second half of the 18th 
+              century.</p>
+          </template>
+  
+          <img src="./static/images/result/94.jpg" alt="Description 4" id="image4">
+          <template id="desc-image4">
+            <p><b>ID</b>: 94</p>
+            <p><b>Ground Truth</b>: 1800-1819</p>
+            <p><b>Predicted Result</b>: <b>1900-1919</b></p>
+            <p><b>Reason</b>: The building exhibits characteristics of London's Edwardian era with its red brickwork and 
+              white sash windows. While the brickwork could suggest a slightly earlier period, the overall style and sash 
+              windows are typical of the late Victorian to Edwardian period. The dormers look modern, suggesting renovation, 
+              but the main structure seems older.</p>
+          </template>
+  
+          <img src="./static/images/result/42.jpg" alt="Description 5" id="image5">
+          <template id="desc-image5">
+            <p><b>ID</b>: 42</p>
+            <p><b>Ground Truth</b>: 1820-1839</p>
+            <p><b>Predicted Result</b>: <b>1920-1939</b></p>
+            <p><b>Reason</b>: The building features elements such as sash windows and a relatively plain facade, characteristic 
+              of British architecture styles prevalent during the period between the World Wars.</p>
+          </template>
+  
+          <img src="./static/images/result/34.jpg" alt="Description 6" id="image6">
+          <template id="desc-image6">
+            <p><b>ID</b>: 34</p>
+            <p><b>Ground Truth</b>: 1840-1859</p>
+            <p><b>Predicted Result</b>: <b>1820-1839</b></p>
+            <p><b>Reason</b>: The building exhibits neoclassical architectural features, such as a portico with Ionic columns, 
+              a pediment, and stonework typical of the early 19th century. These characteristics are consistent with buildings 
+              constructed in the Regency period, which falls within the 1820-1839 age epoch.</p>
+          </template>
+  
+          <img src="./static/images/result/128.jpg" alt="Description 7" id="image7">
+          <template id="desc-image7">
+            <p><b>ID</b>: 128</p>
+            <p><b>Ground Truth</b>: 1860-1879</p>
+            <p><b>Predicted Result</b>: <b>1860-1879</b></p>
+            <p><b>Reason</b>: The building in the image displays features typical of Victorian architecture, such as ornate 
+              ironwork, sash windows, and the use of London stock brickwork, which suggest that it was likely constructed 
+              during the Victorian era, between 1860 and 1879.</p>
+          </template>
+  
+          <img src="./static/images/result/28.jpg" alt="Description 8" id="image8">
+          <template id="desc-image8">
+            <p><b>ID</b>: 28</p>
+            <p><b>Ground Truth</b>: 1880-1899</p>
+            <p><b>Predicted Result</b>: <b>1880-1899</b></p>
+            <p><b>Reason</b>: The building features characteristics of Victorian architecture, evident in its ornate stone carving, 
+              bay windows, iron railings on the balconies, and overall grand facade, which are typical of the late 19th century.</p>
+          </template>
+  
+          <img src="./static/images/result/40.jpg" alt="Description 9" id="image9">
+          <template id="desc-image9">
+            <p><b>ID</b>: 40</p>
+            <p><b>Ground Truth</b>: 1900-1919</p>
+            <p><b>Predicted Result</b>: <b>1880-1899</b></p>
+            <p><b>Reason</b>: The building in the image features elements of Victorian architecture, which is common in London 
+              for structures built during the late 19th century, such as ornate brickwork, terracotta tiles, the presence of a 
+              turret, and the overall ornamental detail.</p>
+          </template>
+  
+          <img src="./static/images/result/36.jpg" alt="Description 10" id="image10">
+          <template id="desc-image10">
+            <p><b>ID</b>: 36</p>
+            <p><b>Ground Truth</b>: 1920-1939</p>
+            <p><b>Predicted Result</b>: <b>1900-1919</b></p>
+            <p><b>Reason</b>: The building features red brickwork common in Edwardian architecture, a period that spanned from 
+              1901 to 1910. The simplicity of design and industrial window styling also suggest a timeframe around the early 
+              20th century, yet it lacks ornate detailing which became less common post-Victorian era, pointing towards the 
+              era of 1900-1919.</p>
+          </template>
+  
+          <img src="./static/images/result/55.jpg" alt="Description 11" id="image11">
+          <template id="desc-image11">
+            <p><b>ID</b>: 55</p>
+            <p><b>Ground Truth</b>: 1940-1959</p>
+            <p><b>Predicted Result</b>: <b>1940-1959</b></p>
+            <p><b>Reason</b>: The building's architectural style suggests a post-war design common between the 1940s and 1950s in 
+              London, characterized by the streamlined, functional appearance and the use of stone cladding.</p>
+          </template>
+  
+          <img src="./static/images/result/39.jpg" alt="Description 12" id="image12">
+          <template id="desc-image12">
+            <p><b>ID</b>: 39</p>
+            <p><b>Ground Truth</b>: 1960-1979</p>
+            <p><b>Predicted Result</b>: <b>1973-1997</b></p>
+            <p><b>Reason</b>: The building in the image appears to be the British Library in London, which was constructed between 
+              1973 and 1997. The architectural style is indicative of the late 20th century, with its large, blocky form, red 
+              brickwork, and lack of ornamentation typical of the Brutalist style which was popular from the 1950s to the 
+              mid-1970s but with construction periods extending into the 1980s and 1990s for some Brutalist buildings.</p>
+          </template>
+  
+          <img src="./static/images/result/65.jpg" alt="Description 13" id="image13">
+          <template id="desc-image13">
+            <p><b>ID</b>: 65</p>
+            <p><b>Ground Truth</b>: 1980-1999</p>
+            <p><b>Predicted Result</b>: <b>1960-1979</b></p>
+            <p><b>Reason</b>: The building exhibits design features typical of mid-20th-century architecture, such as a grid-like 
+              facade with repetitive patterns, large windows, and use of materials like concrete with a pebbled finish. These 
+              characteristics are commonly associated with the Brutalist movement and the modernist styles prevalent in the 
+              1960s and 1970s.</p>
+          </template>
+  
+          <img src="./static/images/result/12.jpg" alt="Description 14" id="image14">
+          <template id="desc-image14">
+            <p><b>ID</b>: 12</p>
+            <p><b>Ground Truth</b>: 2000-2019</p>
+            <p><b>Predicted Result</b>: <b>2000-2019</b></p>
+            <p><b>Reason</b>: The building in the image features a modern architectural design, with large glass windows, clean 
+              lines, and a contemporary façade which suggests it was constructed in the late 20th or early 21st century. This 
+              style is typical for residential buildings built during the 2000-2019 epoch.</p>
+          </template>
+  
+          <img src="./static/images/result/62.jpg" alt="Description 15" id="image15">
+          <template id="desc-image15">
+            <p><b>ID</b>: 62</p>
+            <p><b>Ground Truth</b>: >2020</p>
+            <p><b>Predicted Result</b>: <b>2000-2019</b></p>
+            <p><b>Reason</b>: The building features a modern architectural design with a clean, linear facade, and extensive 
+              use of glass and uniform, possibly prefabricated, materials, which are indicative of the 21st-century 
+              architectural trends and building techniques. The presence of a contemporary shopfront logo also suggests 
+              a recent construction.</p>
+          </template>
+  
+          <!-- 更多图片 -->
+        </div>
+      </div>
+      <div class="column is-three-quarters">
+        <div id="description-text" style="padding: 20px;">
+          <p><b>ID</b>: Image ID in FI-London</p>
+          <p><b>Ground Truth</b>: Actual building age epoch</p>
+          <p><b>Predicted Result</b>: Predicted result from our proposed classifier</p>
+          <p><b>Reason</b>: Descriptive reasoning process given by GPT-4</p> 
+        </div>
+      </div>
+    </div>
+
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-4">General Performance</h2>
+      </div>
+    </div>
+
+    <div class="columns is-centered">
+      <div class="column">
+        <div class="content has-text-centered is-tree-quarters">
+          <h2 class="title is-5">Output Example</h2>
+          <img src="./static/images/output.png" alt="Normal Confusion Matrix" style="max-width:90%; margin:auto;">
+        </div>
+      </div>
+    
+      <div class="column is-one-quarter">
+        <div class="content has-text-centered">
+          <h2 class="title is-5">Evaluation Metrics</h2>
+          <img src="./static/images/result.png" alt="Confusion Matrix with one adjacent age epoch" style="max-width:100%; margin:auto;">
+        </div>
+      </div>
+
+    </div>
+
+    <!-- <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-4">Confusion Matrix</h2>
+      </div>
+    </div> -->
+
+    <div class="columns is-centered">
+      <div class="column">
+        <div class="content has-text-centered">
+          <h2 class="title is-5">Normal Confusion Matrix</h2>
+          <img src="./static/images/con_at1.png" alt="Normal Confusion Matrix" style="max-width:100%; margin:auto;">
+        </div>
+      </div>
+    
+      <div class="column">
+        <div class="content has-text-centered">
+          <h2 class="title is-5">with one adjacent epoch</h2>
+          <img src="./static/images/con_at3.png" alt="Confusion Matrix with one adjacent age epoch" style="max-width:100%; margin:auto;">
+        </div>
+      </div>
+    
+      <div class="column">
+        <div class="content has-text-centered">
+          <h2 class="title is-5">with two adjacent epochs</h2>
+          <img src="./static/images/con_at5.png" alt="Confusion Matrix with two adjacent age epochs" style="max-width:100%; margin:auto;">
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+<!--/ Result. -->
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Acknowledgement. -->
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">🥰 Acknowledgement</h2>
+        <div class="content has-text-justified">
+          <p>
+            This zero-shot classifier is based on <a href="https://platform.openai.com/docs/guides/vision">GPT-4 Vision</a> by OpenAI. 
+            The Facade Image in London (FI-London) dataset is grounded in 
+            <a href="https://colouringcities.org/">Colourring Cities Research Programme</a> by the Alan Turing Institude and 
+            <a href="https://www.researchgate.net/publication/333569102_Colouring_London_-A_Crowdsourcing_Platform_for_Geospatial_Data_Related_to_London's_Building_Stock_Winner_Best_Paper_GISRUK_2019">Colouring London</a> 
+            by Hudson, P., <i>et al.</i> in 2018. We thank for their great works.
+          </p>
+          <p>
+            This work is supported by the 
+            <a href="https://gtr.ukri.org/projects?ref=studentship-2811109">Engineering and Physical Sciences Research Council</a> through an industrial CASE studentship with 
+            <a href="https://www.ordnancesurvey.co.uk/">Ordnance Survey</a>. We sincerely thank Dr James Haworth (UCL) and Dr Stefano Cavazzi (OS) for their help.
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--/ Acknowledgement. -->
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Acknowledgement. -->
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">📃 BibTeX</h2>
+        <div class="content has-text-justified">
+          <p>
+            A preprint will be available soon.
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--/ Acknowledgement. -->
+  </div>
+</section>
+
+<!-- <section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">📃 BibTeX</h2>
+    <pre><code>@article{zeng2024zeroshot,
+  title     = {Zero-shot Building Age Classification From Facade Image Using GPT-4},
+  author    = {Zeng, Zichao and Goo, June Moh and Wang, Xinglei and Chi, Bin and Wang, Meihui and Boehm, Jan},
+  journal   = {},
+  year      = {2024}
+}</code></pre>
+  </div>
+</section> -->
+
+<footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This website is licensed under a <a rel="license"
+                                                href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+            Commons Attribution-ShareAlike 4.0 International License</a> and adapted from <a 
+            href="https://github.com/nerfies/nerfies.github.io">Nerfies</a>. 
+            We sincerely express our gratitude to <a
+            href="https://keunhong.com/">Keunhong Park</a> 
+            for developing and making this template openly available.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
